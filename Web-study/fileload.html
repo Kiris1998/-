@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>FileLoad</title>
+</head>
+<body>
+  <form id="myFile" enctype="multipart/form-data">
+    <input type="file">
+  </form>
+  <button onclick="submit()">Submit</button>
+  <progress id="progress" value="50" max="100"></progress>
+  <div id="preview"></div>
+</body>
+<script>
+  function submit() {
+    let xhr = new XMLHttpRequest()
+    let file = document.getElementById('myFile')
+    file = file[0][0]
+    console.log(file)
+    let formData = new FormData()
+    let preview = document.getElementById('preview')
+    let img = document.createElement('img')
+    // img.file = file
+    // img.onload = function () {
+    //   preview.appendChild(img)
+    // }
+    // console.log(window.URL.createObjectURL(file))
+    // img.src = window.URL.createObjectURL(file)
+    // img.onload = () => {
+    //   window.URL.revokeObjectURL(file)
+    // }
+    // preview.appendChild(img)
+    formData.append('myFile',file)
+    console.log(formData)
+    xhr.open('POST','./upload.php')
+    xhr.onload = () => {
+      if(this.this.status === 200) {
+        console.log('success')
+      }
+    }
+    let percentComplete = 0
+    xhr.upload.onprogress = function (e) {  // xhr.upload.onprogress在上传阶段(即xhr.send()之后，xhr.readystate=2之前)触发
+                                            // 每50ms触发一次。所以文件太小网络环境好的时候是直接到100%的。
+      if (e.lengthComputable) {
+        percentComplete = (e.loaded /e.total) * 100 
+      }
+    }
+    xhr.send(formData)
+    xhr = null
+  }
+</script>
+</html>

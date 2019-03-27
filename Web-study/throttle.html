@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>throttle</title>
+</head>
+<body>
+  <button onclick="thCl()">click</button>
+</body>
+<script>
+  function cl() {
+    console.log(123)
+  }
+  function throttle(fn,ms,isImmediate){ // 高频事件触发，但在n秒内只会执行一次，所以节流会稀释函数的执行频率
+    let timer = null                    // 每次触发事件时都判断当前是否有等待执行的延时函数
+    return function () {
+      let that = this
+      let args = arguments
+      if (isImmediate) {
+        fn.apply(that,args)
+        isImmediate = false
+      }
+      if (!timer) {
+        timer = setTimeout(() => {
+          fn.apply(that,args)
+          timer = null
+        }, ms);
+      }
+    }
+  }
+  thCl = throttle(cl,1000,true)
+</script>
+</html>

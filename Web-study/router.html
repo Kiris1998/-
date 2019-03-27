@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Router</title>
+</head>
+<body>
+  <a href="/">yellow</a>
+  <a href="/blue">blue</a>
+</body>
+<script>
+  //1.hash路由 存在#来阻止页面刷新，兼容性好，但是不够美观
+  // class Router {
+  //   constructor(){
+  //     this.routes = {}  //储存路由以及对应的callback函数
+  //     this.currentUrl = ''
+  //     this.refresh = this.refresh.bind(this)
+  //     window.addEventListener('load', this.refresh, false);
+  //     window.addEventListener('hashchange', this.refresh, false);
+  //   }
+  //   route(path,cb){
+  //     this.routes[path] = cb || function () {}
+  //   }
+  //   refresh(){
+  //     this.currentUrl = location.hash.slice(1) || '/'
+  //     this.routes[this.currentUrl]()
+  //   }
+  // }
+
+  // let route1 = new Router()
+  // let body = document.querySelector('body')
+  // function changeBc(color) {
+  //   body.style.background = color
+  // }
+  // route1.route('/',()=>{changeBc('yellow')})
+  // route1.route('/blue',()=>{changeBc('blue')})
+// 2.history
+class Router {
+    constructor(){
+      this.routes = {}  //储存路由以及对应的callback函数
+      this._popState()  // 初始化的时候就已经监听了popstate事件
+    }
+    init(path){
+      console.log(path)
+      window.history.replaceState({path:path},null,path)  // 修改记录而非添加记录  popstate事件触发时，该对象会传入回调函数。如果不需要这个对象，此处可以填null、title、新的网址，必须同域
+      this.routes[path] && this.routes[path]()
+    }
+    go(path){
+      console.log(path)
+      history.pushState({path:path},null,location.pathname) 
+      this.routes[path] && this.routes[path]()
+    }
+    _popState(){
+      window.addEventListener('popstate',(e) => {
+        let path = e.state && e.state.path
+        this.routes[path] && this.routes[path]()
+      })
+    }
+    route(path,cb){
+      this.routes[path] = cb || function () {}
+    }
+  }
+
+  let route1 = new Router()
+  route1.init(location.pathname)
+  let body = document.querySelector('body')
+  function changeBc(color) {
+    body.style.background = color
+  }
+  route1.route('/',()=>{changeBc('yellow')})
+  route1.route('/blue',()=>{changeBc('blue')})
+  document.getElementsByTagName('a')[0].addEventListener('click',e => {
+    e.preventDefault()
+    route1.go(e.target.getAttribute('href'))
+  })
+  document.getElementsByTagName('a')[1].addEventListener('click',e => {
+    e.preventDefault()
+    route1.go(e.target.getAttribute('href'))
+  })
+</script>
+</html>

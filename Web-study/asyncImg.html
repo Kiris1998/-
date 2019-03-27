@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <div></div>
+</body>
+<script>
+  function loadImg (src) {
+    const promise = new Promise((resolve,reject) => {
+      img = document.createElement('img')
+      img.src = src
+      img.onload = () => {
+        resolve(img)
+      }
+      img.onerror = () => {
+        reject('Failed')
+      }
+    })
+    return promise
+  }
+
+  async function load(src) {
+    let img = await loadImg(src)  //await的返回值是promise的返回值
+    let body = document.getElementsByTagName('div')
+      body[0].appendChild(img)
+  }
+  load('https://www.imooc.com/static/img/index/logo_new.png')
+  // img.then((res)=>{
+  //   console.log(res)
+  // })
+  
+  
+</script>
+</html>

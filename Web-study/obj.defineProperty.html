@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>defineProperty</title>
+</head>
+<body>
+  <input id="input" type="text">
+  <span id="span"></span>
+</body>
+<script>
+  //1.数据劫持
+  // let obj ={}
+  // Object.defineProperty(obj,'text',{
+  //   get(){
+  //     console.log('I get the val')
+  //   },
+  //   set(newVal){
+  //     console.log(newVal)
+  //     document.getElementById('input').value = newVal
+  //     document.getElementById('span').innerHTML = newVal
+  //   }
+  // })
+  // let input = document.getElementById('input')
+  // input.addEventListener('keyup',(e) => {
+  //   obj.text = e.target.value
+  // })
+  //2.数据劫持加观察者订阅者
+  let uid = 0
+  class Manager {
+    constructor() {
+      this.id = uid++ // 每个manager的id
+      this.subs = []  // 储存订阅者的数组
+    }
+    addSub(sub) {
+      this.subs.push(sub)
+    }
+    depend() {
+      Manager.target.addManager(this)
+    }
+    notify() {
+      this.subs.forEach(item => {
+        item.update()
+      })
+    }
+  }
+  Manager.target = null // 当工作时指向watcher
+
+  class Observer {
+    constructor(val) {
+      this.value = val
+    }
+    defineReactive(obj,key,val) {
+      const manager = new Mnanager()
+      let childObserve = observe(val)
+      Object.defineProperty(obj,key,{
+        enumerable: true, // 可否for-in遍历
+        configurable: true,// 可否修改配置
+        get: () => {
+           // 如果Dep类存在target属性，将其添加到dep实例的subs数组中
+        // target指向一个Watcher实例，每个Watcher都是一个订阅者
+        // Watcher实例在实例化过程中，会读取data中的某个属性，从而触发当前get方法
+          if (Manager.target) {
+            manager.depend()
+          }
+          return val
+        },
+        set: (newVal) => {
+          if (val == newVal) return;
+          val = newVal
+          childObserve = observe(newVal)
+          manager.notify()
+        }
+      })
+    }
+    observe(val) {
+      if (!val || typeof(val) !== 'object') {   // 当值不存在或不是复杂的数据类型时无需继续监控
+        return
+      }
+      return new Observer(val)
+    }
+  }
+  class Watcher {
+    constructor(vm,expOrFn,cb) {
+      this.managerIds = {}
+      this.vm = vm
+      this.expOrFn = expOrFn  //被订阅的数据
+      this.cb = cb
+      this.value = this.get()
+    }
+    addManager(manager) {
+      if(!this.managerIds.hasOwnProperty(manager.id)) {
+        manager.addSub(this)
+        this.managerIds[manager.id] = manager
+      }
+    }
+    run() {
+      let val = this.get()
+      if (val != this.value) {
+        this.value = val
+        this.cb.call(this.vm,val)
+      }
+    }
+    update() {
+      this.run()
+    }
+    get() {
+      // 当前订阅者(Watcher)读取被订阅数据的最新更新后的值时，通知订阅者管理员收集当前订阅者
+      Manager.target = this
+      let val = this.vm._data[this.expOrFn]
+      Manager.target = null
+      return val
+    }
+  }
+</script>
+</html>

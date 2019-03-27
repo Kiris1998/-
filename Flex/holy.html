@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;/*主轴方向*/
+    }
+    header,footer{
+      flex: 1;
+    }
+    .body{
+      display: flex;
+      flex: 0 0 400px;
+    }
+    main{
+      flex: 1;
+      background: yellow;
+    }
+    nav{
+      flex: 0 0 20%; /*flex-grow有空闲 flex-shrink挤一挤 flex-basis主轴空间*/
+      background: yellowgreen;
+    }
+    aside{
+      flex: 0 0 15%;
+      background: bisque;
+      order: -1;
+    }
+  </style>
+</head>
+<body>
+  <header style="background: blueviolet"></header>
+  <div class="body">
+    <main></main>
+    <nav></nav>
+    <aside></aside>
+  </div>
+  <footer style="background: brown"></footer>
+</body>
+</html>
