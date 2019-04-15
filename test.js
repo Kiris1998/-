@@ -58,3 +58,11 @@
 //        cur_line = 0;
 //    }
 // });
+function create(letter) {
+  var text1 = '<span class="word color'
+  var num = parseInt(Math.random()*24,10)
+  var text2 = '">'
+  var res = text1 + num + text2 + letter + '</span>'
+  console.log(res)
+}
+create('a')

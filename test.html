@@ -1,36 +1,79 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
-  <style>
-    ul{
-      background: yellow;
-      width: 100px;
-      
-    }
-  </style>
-</head>
-<body>
-  <ul id="test">
-    <li>1</li>
-    <li>2</li>
-    <li>3</li>
-    <li>4</li>
-    <li>5</li>
-    <li>6</li>
-  </ul>
-</body>
-<script>
-  let father = document.getElementById('test')
-  father.addEventListener('click',function(e){
-    console.log(e.target.innerHTML)
-    console.log(e.x)
-  })
-  father.onmouseout = function(ev){
-                alert('out')
-            };
-</script>
-</html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+          <title></title>
+          <style></style>
+      </head>
+      <body style="display: flex;justify-content: center;align-items: center;flex-direction: column">
+        <h1 style="margin-left: -490px;color: gray;font-size: 20px;">需求评审0421</h1>
+        <div style="height: 1px;border-top:solid 1px black ">
+        <table border="0" cellpadding="0" cellspacing="0" height="100%" id="bodyTable">
+          <tr>
+              <td align="left" valign="top">
+                  <table border="0" cellspacing="0" width="600" id="emailContainer">
+                      <tr>
+                          <td align="left" valign="top">
+                              <table border="0" cellspacing="0" width="100%" id="emailHeader">
+                                  <tr>
+                                      <td align="left" valign="top">
+                                        Hi，all：<br/>
+                                        本周根据<a href="http://lean.xiaojukeji.com/project/MCFE/board">需求池</a>汇总的list，本周要评审的需求有1个，具体安排如下。                                       
+                                      </td>
+                                  </tr>
+                              </table>
+                          </td>
+                      </tr>
+                      <tr style="height:10px"></tr>
+                      <tr>
+                          <td align="center" valign="top">
+                              <table border="1" cellpadding="20" cellspacing="0" width="100%" id="emailBody">
+                                  <tr>
+                                    <th style="white-space: nowrap">需求名称</th>
+                                    <th style="white-space: nowrap">任务分组</th>
+                                    <th style="white-space: nowrap">时间安排</th>
+                                    <th style="white-space: nowrap">主讲</th>
+                                    <th style="white-space: nowrap">评审人员</th>
+                                  </tr><tr>
+      <td align="center" valign="top">
+          <a href="http://lean.xiaojukeji.com/project/MCFE-108/board">测试</a>
+      </td>
+      <td align="center" valign="top" style="white-space: nowrap">
+          其他
+      </td>
+      <td align="center" valign="top">
+          04/09 15:04-04/10 15:04  jk
+      </td>
+      <td align="center" valign="top" style="white-space: nowrap">
+          张俊
+      </td>
+      <td align="center" valign="top">
+        路飞
+        
+      </td>
+  </tr></table>
+                    </td>
+                </tr>
+                <tr style="height:10px"></tr>
+                <tr>
+                    <td align="left" valign="top">
+                        <table border="0" width="100%" id="emailFooter">
+                            <tr>
+                                <td align="left" valign="top">
+                                    另外，除了这上面写的这些评审人员外，其他跟需求功能相关的同学也可以去参加评审，有漏掉的同学大家相互转发提醒一下。
+                                    <br/><br/>
+                                    温馨提示：<br/> 
+                                    &nbsp;&nbsp;希望各位主讲控制好时间，不要超时影响后面的评审 <br/>
+                                    &nbsp;&nbsp;希望各位参会人员提前阅读需求文档，提高评审效率 <br/><br/>
+                                    <span style="color:red">另外，还请各位主讲PM记得做好会议纪要，会议要确定结论（是否评审通过），以及后续的行动项，会后以邮件形式周知大家。</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                </table>
+                </td>
+                </tr>
+                </table>
+                </body>
+                </html>

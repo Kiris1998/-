@@ -240,6 +240,8 @@ dom tree + css tree = render tree
 
 
 ## 15.CDN：内容分发网络
+  --SEO（Search Engine Optimization），网站的搜索引流。
+
   --而HTTP传输时延对web的访问速度的影响很大，在绝大多数情况下是起决定性作用的，这是由TCP/IP协议的一些特点决定的。物理层上的原因是光速有限、信道有限，协议上的原因有丢包、慢启动、拥塞控制等。
   要提高访问速度，最简单的做法当然就是多设置几个服务器，让终端用户离服务器“更近”。典型的例子是各类下载网站在不同地域不同运营商设置镜像站，或者是像Google那样设置多个数据中心。但是多设几个服务器的问题也不少，一是多地部署时的困难，二是一致性没法保障，三则是管理困难、成本很高。实际上，在排除多地容灾等特殊需求的情况下，对大多数公司这种做法是不太可取的。当然，这种方案真正做好了，甚至是比后续所说的使用CDN要好的。
 
@@ -258,6 +260,7 @@ dom tree + css tree = render tree
   通过以上的分析我们可以得到，为了实现既要对普通用户透明(即加入缓存以后用户客户端无需进行任何设置，直接使用被加速网站原有的域名即可访问，
   又要在为指定的网站提供加速服务的同时降低对ICP的影响，只要修改整个访问过程中的域名解析部分，以实现透明的加速服务。
 
+  -- 坏处：由于cdn导致的ip变化，很有可能出现404
 ## 16. ['1', '2', '3'].map(parseInt)
 ### answer[1,NaN,NaN]。
 ### why？ 因为parseInt第二个参数是默认进制，map使用时默认传入第二个参数是index，当第二个参数是0时默认是十进制，2大于一进制最大值，3大于二进制最大值
@@ -542,6 +545,7 @@ Koa中间件机制采用洋葱模型，在处理请求时，从最外层开始�
 1. 这是身披SSL的HTTP运行基于TCP的SSL上，添加了加密和认证机制
 2. 端口在443而非80
 3. 需要证书、共享密钥加密和公开密钥加密并用的混合加密机制
+4. https运行在传输层，http运行在应用层
 ### 作用
 + 一是用于确定请求的目标服务器的身份；
 + 二是保证传输的数据不会被网络中间窃听或者篡改，即是防止中间人攻击。
@@ -633,7 +637,11 @@ document.cookie = "username=cfangxu; secure"
 注意：如果想在客户端即网页中通过 js 去设置secure类型的 cookie，必须保证网页是https协议的。在http协议的网页中是无法设置secure类型cookie的。
 4. httpOnly 在客户端是不能通过js代码去设置一个httpOnly类型的cookie的，这种类型的cookie只能通过服务端来设置。
 原因：如果任何 cookie 都能被客户端通过document.cookie获取会发生什么可怕的事情。当我们的网页遭受了 XSS 攻击，有一段恶意的script脚本插到了网页中。这段script脚本做的事情是：通过document.cookie读取了用户身份验证相关的 cookie，并将这些 cookie 发送到了攻击者的服务器。攻击者轻而易举就拿到了用户身份验证信息，于是就可以摇摇大摆地冒充此用户访问你的服务器了（因为攻击者有合法的用户身份验证信息，所以会通过你服务器的验证）。
-
+### js操作
+```javascript
+document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString(); 
+document.cookie= name + "="+cval+";expires="+exp.toGMTString(); //时间设置为过去的时间
+```
 ### 服务端session
 --服务端的session的实现对客户端的cookie有依赖关系的
 1. 服务端执行Session机制
@@ -653,7 +661,12 @@ document.cookie = "username=cfangxu; secure"
 当我们关闭浏览器，再打开它，连接服务器时，服务器端会分配一个新的session，也就是说会启动一个新的会话。
 
 ### localStorage实现多标签页通信
-+ 监听storage事件
++ 监听storage事件 handle回调函数中有个e参数
+  - key	设置或删除或修改的键。调用clear()时，则为null。
+  - oldValue	改变之前的旧值。如果是新增元素，则为null。
+  - newValue	改变之后的新值。如果是删除元素，则为null。
+  - storageArea	该属性是一个引用，指向发生变化的sessionStorage或localStorage对象
+  - url	触发这个改变事件的页面的URL
 + 5M
 + 同源
 
@@ -1194,6 +1207,7 @@ function curry(fn, args) {
 - 主要功能是将网络地址翻译成对应的物理地 ，并决定如何将数据从发送方路由到接收方。该层的作用包括：对子网间的数据包进行路由选择，实现拥塞控制、网际互连等功能。 
 - 协议数据单元为数据包（packet）。 
 - 在网络层的互联设备包括：路由器（Router）等。
+- ip协议
 4. 传输层
 - 第一个端到端，即主机到主机的层次。其主要功能是负责将上层数据分段并提供端到端的、可靠的或不可靠的传输。此外，传输层还要处理端到端的差错控制和流量控制问题。 
 - 协议数据单元为数据段（segment）。 
@@ -1248,3 +1262,193 @@ for (let i = 0; i< 10; i++){
   }, 1000)
 }
 ```
+
+## inline 和 inline-block 的区别
+- inline 只能设置左右 margin、padding, 不能设置 width 和 height
+- inline-block 生成一个块级别框，但是框的行为跟内联元素一样
+
+## 计算属性和 watch 的区别
+计算属性是自动监听依赖值的变化，从而动态返回内容，监听是一个过程，在监听的值变化时，可以触发一个回调，并做一些事情。
+所以区别来源于用法，只是需要动态值，那就用计算属性；需要知道值的改变后执行业务逻辑，才用 watch，用反或混用虽然可行，但都是不正确的用法。
+说出一下区别会加分
+- computed 是一个对象时，它有哪些选项？
+- computed 和 methods 有什么区别？
+- computed 是否能依赖其它组件的数据？
+- watch 是一个对象时，它有哪些选项？
+1. 有get和set两个选项
+2. methods是一个方法，它可以接受参数，而computed不能，computed是可以缓存的，methods不会。
+3. computed可以依赖其他computed，甚至是其他组件的data
+4. watch 配置
+  - handlerdeep 是否深度
+  - immeditate 是否立即执行
+
+## nextTick()
+在下次 DOM 更新循环结束之后执行延迟回调。在修改数据之后，立即使用这个回调函数，获取更新后的 DOM。
+
+## 三栏布局
+- 水平三栏布局
+``` html
+// 1.浮动布局/BFC --没有办法优先加载内容模块
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+      .left {
+          float: left;
+          height: 200px;
+          width: 100px;
+          margin-right: 20px;
+          background-color: red;
+      }
+      .right {
+          width: 200px;
+          height: 200px;
+          float: right;
+          margin-left: 20px;
+          background-color: blue;
+      }	
+      .main {
+          height: 200px;
+          overflow: hidden; // margin-left: 120px; margin-right: 220px;
+          background-color: green;
+      }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left"></div>
+        <div class="right"></div>
+        <div class="main"></div>
+    </div>
+</body>
+</html>
+
+// 圣杯布局和双飞翼布局基本上是一致的，都是两边固定宽度，中间自适应的三栏布局，其中，中间栏放到文档流前面，保证先行渲染。解决方案大体相同，都是三栏全部float:left浮动，区别在于解决中间栏div的内容不被遮挡上，圣杯布局是中间栏在添加相对定位，并配合left和right属性，效果上表现为三栏是单独分开的（如果可以看到空隙的话），而双飞翼布局是在中间栏的div中嵌套一个div，内容写在嵌套的div里，然后对嵌套的div设置margin-left和margin-right，效果上表现为左右两栏在中间栏的上面，中间栏还是100%宽度，只不过中间栏的内容通过margin的值显示在中间。
+
+// 双飞翼布局
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .content {
+  	    float: left;
+  	    width: 100%;
+        }
+        .main {
+  	    height: 200px;
+  	    margin-left: 110px;
+  	    margin-right: 220px;
+  	    background-color: green;
+        }
+	.left {
+	    float: left;
+	    height: 200px;
+	    width: 100px;
+	    margin-left: -100%;
+	    background-color: red;
+	}
+	.right {
+	    width: 200px;
+	    height: 200px;
+	    float: right;
+	    margin-left: -200px;
+	    background-color: blue;
+	}	
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="main"></div>
+    </div>
+    <div class="left"></div>
+    <div class="right"></div>
+</body>
+</html>
+
+// 圣杯布局
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+	.container {
+	    margin-left: 120px;
+	    margin-right: 220px;
+	}
+	.main {
+	    float: left;
+	    width: 100%;
+	    height: 300px;
+	    background-color: red;
+	}
+	.left {
+	    float: left;
+	    width: 100px;
+	    height: 300px;
+	    margin-left: -100%;
+	    position: relative;
+	    left: -120px;
+	    background-color: blue;
+	}
+	.right {
+	    float: left;
+	    width: 200px;
+	    height: 300px;
+	    margin-left: -200px;
+	    position: relative;
+	    right: -220px;
+	    background-color: green;
+	}
+    </style>
+</head>
+<body>
+    <div class="container">
+      <div class="main"></div>
+      <div class="left"></div>
+      <div class="right"></div>
+    </div>
+</body>
+</html>
+// 相对、绝对布局
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+	.container {
+	    position: relative;
+	}
+	.main {
+	    height: 400px;
+	    margin: 0 120px;
+	    background-color: green;
+	}
+	.left {
+	    position: absolute;
+	    width: 100px;
+	    height: 300px;
+	    left: 0;
+	    top: 0;
+	    background-color: red;
+	}
+	.right {
+	    position: absolute;
+	    width: 100px;
+	    height: 300px;
+	    background-color: blue;
+            right: 0;
+	    top: 0;
+	}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main"></div>
+	<div class="left"></div>
+	<div class="right"></div>
+    </div>
+</body>
+</html>
+```
+
+## 判断对象是否为空
+1. 对象中的symbol属性获取 getOwnPropertySymbols --其length !== 0 则false
+2. 判断对象中有没有正常的属性 --forin、Object.keys()、getOwnPropertyNames、JSON.stringify() === '{}'
